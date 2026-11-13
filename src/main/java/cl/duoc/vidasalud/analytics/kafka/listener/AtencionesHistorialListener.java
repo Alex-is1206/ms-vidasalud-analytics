@@ -18,7 +18,7 @@ import cl.duoc.vidasalud.analytics.service.HistorialService;
  *
  * Un solo consumidor (concurrency por defecto = 1) lee las 3 particiones: guardar el
  * historial no necesita mas paralelismo. A diferencia de las metricas, NO relee desde
- * el inicio al arrancar: el historial se guarda (en Oracle, tarea A1) y continua desde
+ * el inicio al arrancar: el historial se guarda en Oracle y continua desde
  * el ultimo offset confirmado.
  */
 @Component

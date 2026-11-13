@@ -11,6 +11,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.listener.ConsumerSeekAware;
 import org.springframework.stereotype.Component;
 
+import cl.duoc.vidasalud.analytics.kafka.EventoInvalidoException;
 import cl.duoc.vidasalud.analytics.kafka.ValidadorEventos;
 import cl.duoc.vidasalud.analytics.kafka.evento.BoxEstadoEvento;
 import cl.duoc.vidasalud.analytics.service.MetricasService;
@@ -47,7 +48,17 @@ public class BoxesListener implements ConsumerSeekAware {
             containerFactory = "boxesListenerFactory")
     public void escuchar(ConsumerRecord<String, BoxEstadoEvento> registro) {
         BoxEstadoEvento evento = registro.value();
-        validador.validar(evento);
+        try {
+            validador.validar(evento);
+        } catch (EventoInvalidoException e) {
+            if (rebobinado.esRelectura(registro.topic(), registro.partition(), registro.offset())) {
+                // Ya se envio a la DLT antes del reinicio: no se duplica
+                log.info("analitica | relectura: evento invalido ya enviado a la DLT, se omite | particion {} | offset {}",
+                        registro.partition(), registro.offset());
+                return;
+            }
+            throw e;
+        }
 
         if (metricas.registrarBox(evento)) {
             log.info("analitica | box {} {} | activo {} | capacidad {} | particion {} | offset {}",

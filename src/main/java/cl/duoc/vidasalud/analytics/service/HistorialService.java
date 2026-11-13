@@ -8,10 +8,9 @@ import cl.duoc.vidasalud.analytics.kafka.evento.AtencionEvento;
  * Linea de tiempo de cada atencion: todos sus cambios de estado, en orden.
  *
  * Es una interfaz para separar el consumo de Kafka (listener del grupo vidasalud-historial)
- * del lugar donde se guarda:
- * - HistorialServiceMemoria: implementacion temporal, para probar los consumidores.
- * - HistorialServiceJpa (tarea A1): guarda en Oracle, tabla HISTORIAL_ATENCION, con
- *   event_id UNIQUE como respaldo de la idempotencia.
+ * del lugar donde se guarda. La implementacion es persistencia/HistorialServiceJpa:
+ * Oracle, tabla HISTORIAL_ATENCION, con EVENT_ID UNIQUE como respaldo de la idempotencia.
+ * Al pasar de la version en memoria a Oracle, ni el listener ni el controlador cambiaron.
  */
 public interface HistorialService {
 

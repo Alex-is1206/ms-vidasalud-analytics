@@ -40,8 +40,16 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
-		<!-- La persistencia en Oracle (data-jpa + ojdbc17) se agrega en la tarea A1:
-		     HistorialServiceJpa reemplaza a HistorialServiceMemoria. -->
+		<!-- Historial de atenciones en Oracle (tabla HISTORIAL_ATENCION) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc17</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

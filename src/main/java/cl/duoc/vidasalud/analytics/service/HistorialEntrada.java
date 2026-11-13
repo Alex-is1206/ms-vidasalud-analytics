@@ -2,7 +2,7 @@ package cl.duoc.vidasalud.analytics.service;
 
 /**
  * Un punto de la linea de tiempo de una atencion.
- * Coincide con las columnas de HISTORIAL_ATENCION en Oracle (tarea A1).
+ * Coincide con las columnas de HISTORIAL_ATENCION en Oracle.
  */
 public record HistorialEntrada(
         String eventId,

@@ -160,6 +160,21 @@ class ListenersTest {
     }
 
     @Test
+    @DisplayName("Relectura tras reinicio: un invalido ya procesado se omite; uno nuevo sigue yendo a la DLT")
+    void invalidoReleidoNoVuelveALaDlt() {
+        // El grupo iba en el offset 5 de la particion 2 cuando arranco el servicio
+        analitica.onPartitionsAssigned(Map.of(new TopicPartition(TOPICO, 2), 5L), callback);
+        AtencionEvento invalido = Eventos.cambio(41, null, "CONFIRMADA", "2026-11-13T15:00:00Z");
+
+        // offset 3 < 5: ya se habia enviado a la DLT antes del reinicio
+        analitica.escuchar(new ConsumerRecord<>(TOPICO, 2, 3L, "41", invalido));
+        // offset 7 >= 5: es nuevo, debe llegar al manejador de errores
+        assertThatThrownBy(() -> analitica.escuchar(new ConsumerRecord<>(TOPICO, 2, 7L, "41", invalido)))
+                .isInstanceOf(EventoInvalidoException.class);
+        verifyNoInteractions(metricas);
+    }
+
+    @Test
     @DisplayName("Si la reconstruccion esta desactivada, no se rebobina")
     void sinRebobinado() {
         AtencionesAnaliticaListener sinReconstruir = new AtencionesAnaliticaListener(validador, metricas, false);
