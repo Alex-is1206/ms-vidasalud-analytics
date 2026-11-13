@@ -1,0 +1,1 @@
+98|{"eventId":"evt-invalido-001","tipo":"ESTADO_CAMBIADO","ocurridoEn":"2026-11-13T15:00:00Z","atencionId":98,"estadoNuevo":"CONFIRMADA","prestacionId":1,"origen":"prueba-manual","version":1}
